@@ -3,6 +3,7 @@ module OneWire
     include Retry
   
     def initialize(address, options = {})
+      @options = options
       @path = options[:uncached] ? "/uncached/#{address}" : "/#{address}"
       @path.squeeze!("/")
     end
@@ -15,7 +16,7 @@ module OneWire
     end
     
     def read(attribute)
-      with_retry { Transaction.read("#{@path}/#{attribute}").response.data }
+      with_retry { Transaction.read("#{@path}/#{attribute}").response.data || raise(BadRead) }
     end
     
     def write(attribute, value)

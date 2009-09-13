@@ -9,13 +9,6 @@ module OneWire
       @entries = dirall ?
         with_retry { Transaction.dirall(path) }.response.data.split(",") :
         with_retry { Transaction.dir(path) }.response.map { |r| r.data }
-      # puts "+++++++ entries for #{path}:"
-      # puts @entries.inspect
-      # puts "------- directories for #{path}:"
-      # puts directories.inspect
-      # puts "******* members for #{path}:"
-      # puts members.inspect
-      # puts "================="
     end
     
     def directories
