@@ -33,6 +33,18 @@ module OneWire
       def write(path, value, options = {})
         new(:write, path, options.merge(:value => value))
       end
+      
+      def ping(options = {})
+        host = options[:host] || OneWire::Config.host
+        port = options[:port] || OneWire::Config.port
+        socket = Socket.new(Socket::AF_INET, Socket::SOCK_STREAM, 0)
+        socket.connect(Socket.pack_sockaddr_in(port, host))
+        return true
+      rescue SystemCallError
+        return false
+      ensure
+        socket.close if socket && !socket.closed?
+      end
     end
   end
 end
