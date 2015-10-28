@@ -5,16 +5,17 @@ module OneWire
     
     def initialize(path, options = {})
       @path = path
+      @options = options
       dirall = options.has_key?(:dir_all) ? options[:dirall] : Config.dirall
       @entries = dirall ?
-        with_retry { Transaction.dirall(path) }.response.data.split(",") :
-        with_retry { Transaction.dir(path) }.response.map { |r| r.data }
+        with_retry { Transaction.dirall(path, @options) }.response.data.split(",") :
+        with_retry { Transaction.dir(path, @options) }.response.map { |r| r.data }
     end
     
     def directories
       @directories ||= @entries.collect do |entry|
         begin
-          Directory.new(entry)
+          Directory.new(entry, @options)
         rescue Errno::ENOTDIR
           nil
         end
