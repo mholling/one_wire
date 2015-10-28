@@ -16,15 +16,15 @@ module OneWire
     end
     
     def read(attribute)
-      with_retry { Transaction.read("#{@path}/#{attribute}").response.data || raise(BadRead) }
+      with_retry { Transaction.read("#{@path}/#{attribute}", @options).response.data || raise(BadRead) }
     end
     
     def write(attribute, value)
-      with_retry { Transaction.write("#{@path}/#{attribute}", value) }
+      with_retry { Transaction.write("#{@path}/#{attribute}", value, @options) }
     end
     
     def dir
-      Directory.new(@path)
+      Directory.new(@path, @options)
     end
   end
 end
